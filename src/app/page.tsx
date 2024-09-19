@@ -1,17 +1,54 @@
 /* eslint-disable react/no-unescaped-entities */
 
+
+
 'use client'
 
 import { useState, useEffect } from 'react'
 import Link from "next/link"
-import { Star, Zap, Rocket, CreditCard, Users, Menu, X, Twitter } from "lucide-react"
+import { Star, Zap, Rocket, CreditCard, Users, Check, Menu, X, Twitter } from "lucide-react"
 import AnimatedBackground from './../component/AnimatedBackground'
 import PricingSection from '@/component/PricingSection'
 
 export default function Component() {
   const [currentYear, setCurrentYear] = useState("SIMPLE")
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-
+  const tiers = [
+    {
+      name: "Basic",
+      price: "Gratuit",
+      features: [
+        "Accès aux fonctionnalités de base",
+        "Support communautaire",
+        "Mises à jour mensuelles",
+      ],
+      cta: "Commencer gratuitement",
+      href: "#",
+    },
+    {
+      name: "Pro",
+      price: "5€/mois",
+      features: [
+        "Toutes les fonctionnalités Basic",
+        "Accès prioritaire aux nouvelles fonctionnalités",
+        "Support premium",
+      ],
+      cta: "Essayer Pro",
+      href: "#",
+    },
+    {
+      name: "VIP",
+      price: "10€/mois",
+      features: [
+        "Toutes les fonctionnalités Pro",
+        "Contact direct avec JC, le créateur",
+        "Influence sur le développement du produit",
+        "Tweets boostés par l'algorithme secret",
+      ],
+      cta: "Devenir VIP",
+      href: "https://x.com/CoachJandC",
+    },
+  ]
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentYear(prev => prev === "SIMPLE" ? "Rapide" : prev === "Rapide" ? "Efficace" : "SIMPLE")
@@ -154,22 +191,9 @@ export default function Component() {
               </Link>
           </div>
         </section>
-
-        
-        <section className="relative w-full py-8 md:py-12">
-          <div className="container mx-auto px-4 md:px-6">
-            <div className="flex justify-center">
-              <video
-                className="w-full max-h-80 max-w-2xl rounded-lg shadow-lg"
-                controls
-                autoPlay
-                src="/videos/gice.mp4"
-              />
-            </div>
-          </div>
-        </section>
-
         <PricingSection />
+
+
 
       </main>
 
