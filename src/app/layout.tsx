@@ -5,8 +5,8 @@ import { Inter } from 'next/font/google'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'TweetPro3000 by Gicé',
-  description: 'Révolutionnez vos tweets avec TweetPro3000, le SaaS ultime pour dominer Twitter !',
+  title: 'CTRL by Gicé',
+  description: 'Révolutionnez vos tweets avec CTRL, le SaaS ultime pour dominer Twitter !',
 }
 
 export default function RootLayout({

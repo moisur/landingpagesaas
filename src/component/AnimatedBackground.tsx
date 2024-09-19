@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface Dot {
   x: number;
@@ -14,6 +14,7 @@ interface Dot {
 export default function AnimatedBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const bgGlowRef = useRef<HTMLDivElement>(null)
+  const [, setDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     if (!canvasRef.current || !bgGlowRef.current) return
@@ -22,36 +23,51 @@ export default function AnimatedBackground() {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    let w = canvas.width = window.innerWidth
-    let h = canvas.height = window.innerHeight
-
-    const maxHeight = h * 0.9
-    const minHeight = h * 0.5
-    const maxWidth = 15
-    const minWidth = 2
-    const maxSpeed = 35
-    const minSpeed = 6
-    const md = 100
-    const glow = 10
-
     let dots: Dot[] = []
 
+    const updateDimensions = () => {
+      const { innerWidth: width, innerHeight: height } = window
+      setDimensions({ width, height })
+      canvas.width = width
+      canvas.height = height
+      return { width, height }
+    }
+
+    let { width: w, height: h } = updateDimensions()
+
+    const calculateParameters = () => {
+      const scale = Math.min(w / 1920, h / 1080) // Base scale on a 1920x1080 reference
+      return {
+        maxHeight: h * 0.9,
+        minHeight: h * 0.5,
+        maxWidth: 15 * scale,
+        minWidth: 2 * scale,
+        maxSpeed: 35 * scale,
+        minSpeed: 6 * scale,
+        md: Math.floor(100 * scale), // Adjust number of dots based on screen size
+        glow: 10 * scale
+      }
+    }
+
+    let params = calculateParameters()
+
     const pushDots = () => {
-      for (let i = 1; i < md; i++) {
+      dots = []
+      for (let i = 0; i < params.md; i++) {
         dots.push({
           x: Math.random() * w,
           y: Math.random() * h / 2,
-          h: Math.random() * (maxHeight - minHeight) + minHeight,
-          w: Math.random() * (maxWidth - minWidth) + minWidth,
-          c: Math.random() * 100 + 200, // Using purple to pink range
-          m: Math.random() * (maxSpeed - minSpeed) + minSpeed
+          h: Math.random() * (params.maxHeight - params.minHeight) + params.minHeight,
+          w: Math.random() * (params.maxWidth - params.minWidth) + params.minWidth,
+          c: Math.random() * 100 + 200,
+          m: Math.random() * (params.maxSpeed - params.minSpeed) + params.minSpeed
         })
       }
     }
 
     const render = () => {
       ctx.clearRect(0, 0, w, h)
-      for (let i = 1; i < dots.length; i++) {
+      for (let i = 0; i < dots.length; i++) {
         ctx.beginPath()
         const grd = ctx.createLinearGradient(dots[i].x, dots[i].y, dots[i].x + dots[i].w, dots[i].y + dots[i].h)
         grd.addColorStop(0.0, `hsla(${dots[i].c},50%,50%,.0)`)
@@ -59,23 +75,24 @@ export default function AnimatedBackground() {
         grd.addColorStop(0.5, `hsla(${dots[i].c + 50},70%,60%,.8)`)
         grd.addColorStop(0.8, `hsla(${dots[i].c + 80},50%,50%,.5)`)
         grd.addColorStop(1.0, `hsla(${dots[i].c + 100},50%,50%,.0)`)
-        ctx.shadowBlur = glow
+        ctx.shadowBlur = params.glow
         ctx.shadowColor = `hsla(${dots[i].c},50%,50%,1)`
         ctx.fillStyle = grd
         ctx.fillRect(dots[i].x, dots[i].y, dots[i].w, dots[i].h)
         ctx.closePath()
         dots[i].x += dots[i].m / 100
-        if (dots[i].x > w + maxWidth) {
-          dots[i].x = -maxWidth
+        if (dots[i].x > w + params.maxWidth) {
+          dots[i].x = -params.maxWidth
         }
       }
       window.requestAnimationFrame(render)
     }
 
     const handleResize = () => {
-      w = canvas.width = window.innerWidth
-      h = canvas.height = window.innerHeight
-      dots = []
+      const newDimensions = updateDimensions()
+      w = newDimensions.width
+      h = newDimensions.height
+      params = calculateParameters()
       pushDots()
       ctx.globalCompositeOperation = 'lighter'
     }
