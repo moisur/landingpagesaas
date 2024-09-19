@@ -1,10 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
-
-
-
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from "next/link"
 import { Star, Zap, Rocket, CreditCard, Users, Check, Menu, X, Twitter } from "lucide-react"
 import AnimatedBackground from './../component/AnimatedBackground'
@@ -12,7 +9,9 @@ import AnimatedBackground from './../component/AnimatedBackground'
 export default function Component() {
   const [currentYear, setCurrentYear] = useState("SIMPLE")
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-const tiers = [
+  const menuRef = useRef<HTMLDivElement | null>(null);
+  
+  const tiers = [
   {
     name: "EARLY VIP",
     price: "10€",
@@ -68,76 +67,83 @@ const tiers = [
     description: "Fonctionnalités essentielles pour débutants",
   },
 ]
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentYear(prev => prev === "SIMPLE" ? "Rapide" : prev === "Rapide" ? "Efficace" : "SIMPLE")
-    }, 3000)
 
-    return () => {
-      clearInterval(interval)
+useEffect(() => {
+  const interval = setInterval(() => {
+    setCurrentYear(prev => prev === "SIMPLE" ? "Rapide" : prev === "Rapide" ? "Efficace" : "SIMPLE")
+  }, 3000)
+
+  return () => {
+    clearInterval(interval)
+  }
+}, [])
+
+useEffect(() => {
+  function handleClickOutside(event: MouseEvent) {
+    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      setIsMenuOpen(false)
     }
-  }, [])
+  }
+  
+  document.addEventListener("mousedown", handleClickOutside)
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside)
+  }
+}, [])
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
-
-  return (
-    <div className="relative min-h-screen overflow-hidden bg-black text-white">
-      <div className=" inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob"></div>
-        <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000"></div>
-        <div className="absolute inset-0">
-          <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+return (
+  <div className="relative min-h-screen overflow-hidden bg-black text-white">
+    <div className="inset-0 overflow-hidden pointer-events-none">
+      <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob"></div>
+      <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000"></div>
+      <div className="absolute inset-0">
+        <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
           <path d="M0,50 Q0,30 50,50 T100,50" fill="none" stroke="rgba(59, 130, 246, 0.2)" strokeWidth="0.7"></path>
           <path d="M0,50 Q0,30 50,50 T100,50" fill="none" stroke="rgba(59, 130, 246, 0.2)" strokeWidth="0.7"></path>
           <path d="M0,50 Q25,30 50,50 T100,50" fill="none" stroke="rgba(59, 130, 246, 0.2)" strokeWidth="0.7"></path>
           <path d="M0,70 Q35,50 70,70 T100,70" fill="none" stroke="rgba(139, 92, 246, 0.2)" strokeWidth="0.7"></path>
         </svg>
-                    <path d="M0,50 Q0,30 50,50 T100,50" fill="none" stroke="rgba(59, 130, 246, 0.2)" strokeWidth="0.7"></path>
-
-            <path d="M0,50 Q0,30 50,50 T100,50" fill="none" stroke="rgba(59, 130, 246, 0.2)" strokeWidth="0.7"></path>
-            <path d="M0,50 Q25,30 50,50 T100,50" fill="none" stroke="rgba(59, 130, 246, 0.2)" strokeWidth="0.7"></path>
-            <path d="M0,70 Q35,50 70,70 T100,70" fill="none" stroke="rgba(139, 92, 246, 0.2)" strokeWidth="0.7"></path>
-          </svg>
-        </div>
       </div>
-      <header className="relative z-20 px-4 lg:px-6 h-14 flex items-center justify-between">
-        <Link className="flex items-center justify-center" href="https://x.com/CoachJandC">
-          <Star className="h-6 w-6 text-yellow-400" />
-          <span className="ml-2 font-bold text-xl bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-pink-500">CTRL</span>
+    </div>
+    <header className="relative z-20 px-4 lg:px-6 h-14 flex items-center justify-between">
+      <Link className="flex items-center justify-center" href="https://x.com/CoachJandC">
+        <Star className="h-6 w-6 text-yellow-400" />
+        <span className="ml-2 font-bold text-xl bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-pink-500">CTRL</span>
+      </Link>
+      <nav className="hidden md:flex gap-4 sm:gap-6">
+        <Link className="text-sm font-medium hover:text-purple-500 transition-colors" href="https://x.com/CoachJandC">
+          Fonctionnalités
         </Link>
-        <nav className="hidden md:flex gap-4 sm:gap-6">
-          <Link className="text-sm font-medium hover:text-purple-500 transition-colors" href="https://x.com/CoachJandC">
-            Fonctionnalités
-          </Link>
-          <Link className="text-sm font-medium hover:text-purple-500 transition-colors" href="https://x.com/CoachJandC">
-            Offre VIP
-          </Link>
-          <Link className="text-sm font-medium hover:text-purple-500 transition-colors" href="https://x.com/CoachJandC">
-            Roadmap
-          </Link>
-        </nav>
-        <button className="md:hidden" onClick={toggleMenu}>
+        <Link className="text-sm font-medium hover:text-purple-500 transition-colors" href="https://x.com/CoachJandC">
+          Offre VIP
+        </Link>
+        <Link className="text-sm font-medium hover:text-purple-500 transition-colors" href="https://x.com/CoachJandC">
+          Roadmap
+        </Link>
+      </nav>
+      <div className="md:hidden" ref={menuRef}>
+        <button 
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="p-2 text-gray-200 hover:text-purple-500 transition-colors"
+        >
           {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
-      </header>
-      
-      {isMenuOpen && (
-        <div className="fixed inset-0 z-10 bg-black bg-opacity-90">
-          <nav className="flex flex-col items-center justify-center h-full">
-            <Link className="text-lg font-medium py-2 hover:text-purple-500 transition-colors" href="https://x.com/CoachJandC" onClick={toggleMenu}>
+        {isMenuOpen && (
+          <div className="absolute top-full right-0 w-48 py-2 mt-2 bg-gray-800 rounded-lg shadow-xl">
+            <Link className="block px-4 py-2 text-sm text-gray-200 hover:bg-purple-500 hover:text-white" href="#">
               Fonctionnalités
             </Link>
-            <Link className="text-lg font-medium py-2 hover:text-purple-500 transition-colors" href="https://x.com/CoachJandC" onClick={toggleMenu}>
+            <Link className="block px-4 py-2 text-sm text-gray-200 hover:bg-purple-500 hover:text-white" href="#">
               Offre VIP
             </Link>
-            <Link className="text-lg font-medium py-2 hover:text-purple-500 transition-colors" href="https://x.com/CoachJandC" onClick={toggleMenu}>
+            <Link className="block px-4 py-2 text-sm text-gray-200 hover:bg-purple-500 hover:text-white" href="#">
               Roadmap
             </Link>
-          </nav>
-        </div>
-      )}
-
+          </div>
+        )}
+      </div>
+    </header>
+    
       <main className="flex-1">
         <section className="relative w-full h-screen flex flex-col">
           <div className="relative z-10 text-center px-4 pt-20 flex-grow flex flex-col justify-center items-center">
@@ -179,7 +185,8 @@ const tiers = [
           </div>
         </section>
 
-        <section>
+        <section className="relative z-20 py-12 md:py-24 lg:py-32">
+          <div className="container mx-auto px-4 md:px-6">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-8">
               Offre <span className="text-purple-500">VIP</span> Limitée 💎
             </h2>
@@ -208,6 +215,7 @@ const tiers = [
               >
                 Devenir VIP pour seulement 10€/mois
               </Link>
+          </div>
           </div>
         </section>
 
