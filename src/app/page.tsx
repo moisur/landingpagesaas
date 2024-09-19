@@ -6,14 +6,68 @@
 
 import { useState, useEffect } from 'react'
 import Link from "next/link"
-import { Star, Zap, Rocket, CreditCard, Users, Menu, X, Twitter } from "lucide-react"
+import { Star, Zap, Rocket, CreditCard, Users, Check, Menu, X, Twitter } from "lucide-react"
 import AnimatedBackground from './../component/AnimatedBackground'
-import PricingSection from '@/component/PricingSection'
 
 export default function Component() {
   const [currentYear, setCurrentYear] = useState("SIMPLE")
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-
+const tiers = [
+  {
+    name: "EARLY VIP",
+    price: "10€",
+    yearlyPrice: "100€",
+    features: [
+      "Programmation de tweets",
+      "Analyse de performance ",
+      "Threads automatiques",
+      "Extraction de data",
+      "Analyse de concurrence",
+      "Support prioritaire 24/7",
+      "Accès bêta aux nouvelles fonctionnalités",
+      "Possibilité de consultation mensuelle",
+    ],
+    cta: "Rejoindre les VIP",
+    href: "#",
+    places: "20 places",
+    description: "Accès exclusif pour les premiers adoptants",
+  },
+  {
+    name: "LATE BIRD",
+    price: "15€",
+    yearlyPrice: "150€",
+    features: [
+      "Programmation  de tweets",
+      "Analyse de concurrence",
+      "Extraction de data",
+      "Analyse de concurrence",
+      "Threads automatiques",
+      "Support basique",
+      "Accès bêta aux nouvelles fonctionnalités",
+    ],
+    cta: "S'inscrire",
+    href: "#",
+    places: "80 places",
+    description: "Pour ceux qui veulent plus que le basique",
+  },
+  {
+    name: "SUPER LATE",
+    price: "20€",
+    yearlyPrice: "200€",
+    features: [
+      "Programmation e tweets",
+      "Threads manuels",
+      "Support standard",
+      "Analyse de concurrence",
+      "Extraction de data",
+      "Accès aux nouvelles fonctionnalités",
+    ],
+    cta: "S'inscrire",
+    href: "#",
+    places: "Places illimitées",
+    description: "Fonctionnalités essentielles pour débutants",
+  },
+]
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentYear(prev => prev === "SIMPLE" ? "Rapide" : prev === "Rapide" ? "Efficace" : "SIMPLE")
@@ -156,9 +210,39 @@ export default function Component() {
               </Link>
           </div>
         </section>
-        <PricingSection />
 
-
+        <section className="py-12">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-12 text-white">
+              Choisissez votre plan <span className="text-purple-500">CTRL</span>
+            </h2>
+            <div className="grid md:grid-cols-3 gap-8">
+                {tiers.map((tier) => (
+                  <div
+                    key={tier.name}
+                    className="bg-gray-800 bg-opacity-50 backdrop-blur-lg p-8 rounded-xl shadow-2xl flex flex-col"
+                  >
+                    <h3 className="text-2xl font-bold mb-4 text-white">{tier.name}</h3>
+                    <p className="text-3xl font-bold mb-6 text-purple-500">{tier.price}</p>
+                    <ul className="space-y-4 mb-8 flex-grow">
+                      {tier.features.map((feature, index) => (
+                        <li key={index} className="flex items-start">
+                          <Check className="h-5 w-5 text-purple-500 mr-2 flex-shrink-0 mt-1" />
+                          <span className="text-gray-300">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <Link
+                      href={tier.href}
+                      className="block w-full text-center bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded transition duration-300"
+                    >
+                      {tier.cta}
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            </div>
+        </section>
 
       </main>
 
