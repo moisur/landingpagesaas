@@ -219,7 +219,7 @@ return (
           </div>
         </section>
 
-        <section className="py-12">
+        <section className="relative z-20 py-12">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-12 text-white">
               Choisissez votre plan <span className="text-purple-500">CTRL</span>
